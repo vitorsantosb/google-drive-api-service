@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 //Controllers
-const googleController = require("./controllers/googleApi.controller")
+const googleController = require("./modules/googleApi.controller")
 
 app.use(cors({
   origin: ['https://localhost:3000', 'https://vitorbcs.com'],

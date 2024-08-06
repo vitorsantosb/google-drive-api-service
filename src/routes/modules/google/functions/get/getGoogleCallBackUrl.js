@@ -1,5 +1,6 @@
-const { oAuth2Client } = require('../../../../../Services/GoogleDrive/googleApiConn');
+const { oAuth2Client } = require('../../../../../Services/GoogleDrive/GoogleApiConn');
 const fs = require('node:fs');
+const {StoreGoogleCredentials} = require('../../repository/google.repository');
 module.exports = async (req, res) => {
   const code = req.query.code;
 
@@ -11,7 +12,7 @@ module.exports = async (req, res) => {
 
   console.log("Code: ", code);
 
-  oAuth2Client.getToken(code, (err, token) => {
+  oAuth2Client.getToken(code, async (err, token) => {
     if (err) {
       console.error('Error retrieving access token', err);
       res.status(500).send('Error retrieving access token');
@@ -21,6 +22,8 @@ module.exports = async (req, res) => {
     console.log("Token: ", token);
 
     oAuth2Client.setCredentials(token);
+    
+    await StoreGoogleCredentials(token);
 
     fs.writeFile('credentials.json', JSON.stringify(token), (err) => {
       if (err) {
